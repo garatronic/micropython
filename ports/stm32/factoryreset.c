@@ -41,6 +41,7 @@ static const char fresh_boot_py[] =
 "import machine\r\n"
 "import pyb\r\n"
 "pyb.country('US') # ISO 3166-1 Alpha-2 code, eg US, GB, DE, AU\r\n"
+"pyb.repl_uart(pyb.UART(2, 115200)) # duplicate REPL on UART(2)\r\n"
 "#pyb.main('main.py') # main script to run after this one\r\n"
 #if MICROPY_HW_ENABLE_USB
 "#pyb.usb_mode('VCP+MSC') # act as a serial and a storage device\r\n"
