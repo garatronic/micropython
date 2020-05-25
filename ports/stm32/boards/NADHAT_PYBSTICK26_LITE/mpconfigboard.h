@@ -19,11 +19,11 @@
 
 // UART config
 #define MICROPY_HW_UART1_NAME   "XB"
-#define MICROPY_HW_UART1_TX     (pin_A15)
+#define MICROPY_HW_UART1_TX     (pin_B6)
 #define MICROPY_HW_UART1_RX     (pin_A10)
 #define MICROPY_HW_UART2_NAME   "XA"
-#define MICROPY_HW_UART2_TX     (pin_B6)
-#define MICROPY_HW_UART2_RX     (pin_A10)
+#define MICROPY_HW_UART2_TX     (pin_A2)
+#define MICROPY_HW_UART2_RX     (pin_A3)
 
 // I2C busses
 #define MICROPY_HW_I2C1_NAME "X"
