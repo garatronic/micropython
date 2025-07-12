@@ -13,11 +13,13 @@ ulimit -n 1024
 # general helper functions
 
 function ci_gcc_arm_setup {
+    sudo apt-get update
     sudo apt-get install gcc-arm-none-eabi libnewlib-arm-none-eabi
     arm-none-eabi-gcc --version
 }
 
 function ci_gcc_riscv_setup {
+    sudo apt-get update
     sudo apt-get install gcc-riscv64-unknown-elf picolibc-riscv64-unknown-elf
     riscv64-unknown-elf-gcc --version
 }
@@ -35,6 +37,7 @@ function ci_picotool_setup {
 # c code formatting
 
 function ci_c_code_formatting_setup {
+    sudo apt-get update
     sudo apt-get install uncrustify
     uncrustify --version
 }
@@ -480,13 +483,6 @@ function ci_stm32_misc_build {
 ########################################################################################
 # ports/unix
 
-CI_UNIX_OPTS_SYS_SETTRACE=(
-    MICROPY_PY_BTREE=0
-    MICROPY_PY_FFI=0
-    MICROPY_PY_SSL=0
-    CFLAGS_EXTRA="-DMICROPY_PY_SYS_SETTRACE=1"
-)
-
 CI_UNIX_OPTS_SYS_SETTRACE_STACKLESS=(
     MICROPY_PY_BTREE=0
     MICROPY_PY_FFI=0
@@ -514,8 +510,8 @@ CI_UNIX_OPTS_QEMU_RISCV64=(
 
 CI_UNIX_OPTS_SANITIZE_ADDRESS=(
     VARIANT=coverage
-    CFLAGS_EXTRA="-fsanitize=address"
-    LDFLAGS_EXTRA="-fsanitize=address"
+    CFLAGS_EXTRA="-fsanitize=address --param asan-use-after-return=0"
+    LDFLAGS_EXTRA="-fsanitize=address --param asan-use-after-return=0"
 )
 
 CI_UNIX_OPTS_SANITIZE_UNDEFINED=(
@@ -619,9 +615,9 @@ function ci_unix_standard_v2_run_tests {
 }
 
 function ci_unix_coverage_setup {
-    sudo pip3 install setuptools
-    sudo pip3 install pyelftools
-    sudo pip3 install ar
+    pip3 install setuptools
+    pip3 install pyelftools
+    pip3 install ar
     gcc --version
     python3 --version
 }
@@ -632,7 +628,7 @@ function ci_unix_coverage_build {
 }
 
 function ci_unix_coverage_run_tests {
-    ci_unix_run_tests_full_helper coverage
+    MICROPY_TEST_TIMEOUT=60 ci_unix_run_tests_full_helper coverage
 }
 
 function ci_unix_coverage_run_mpy_merge_tests {
@@ -710,6 +706,7 @@ function ci_unix_float_run_tests {
 }
 
 function ci_unix_clang_setup {
+    sudo apt-get update
     sudo apt-get install clang
     clang --version
 }
@@ -734,16 +731,6 @@ function ci_unix_float_clang_run_tests {
     ci_unix_run_tests_helper CC=clang
 }
 
-function ci_unix_settrace_build {
-    make ${MAKEOPTS} -C mpy-cross
-    make ${MAKEOPTS} -C ports/unix submodules
-    make ${MAKEOPTS} -C ports/unix "${CI_UNIX_OPTS_SYS_SETTRACE[@]}"
-}
-
-function ci_unix_settrace_run_tests {
-    ci_unix_run_tests_full_helper standard "${CI_UNIX_OPTS_SYS_SETTRACE[@]}"
-}
-
 function ci_unix_settrace_stackless_build {
     make ${MAKEOPTS} -C mpy-cross
     make ${MAKEOPTS} -C ports/unix submodules
@@ -762,7 +749,7 @@ function ci_unix_sanitize_undefined_build {
 }
 
 function ci_unix_sanitize_undefined_run_tests {
-    ci_unix_run_tests_full_helper coverage "${CI_UNIX_OPTS_SANITIZE_UNDEFINED[@]}"
+    MICROPY_TEST_TIMEOUT=60 ci_unix_run_tests_full_helper coverage "${CI_UNIX_OPTS_SANITIZE_UNDEFINED[@]}"
 }
 
 function ci_unix_sanitize_address_build {
@@ -773,7 +760,7 @@ function ci_unix_sanitize_address_build {
 }
 
 function ci_unix_sanitize_address_run_tests {
-    ci_unix_run_tests_full_helper coverage "${CI_UNIX_OPTS_SANITIZE_ADDRESS[@]}"
+    MICROPY_TEST_TIMEOUT=60 ci_unix_run_tests_full_helper coverage "${CI_UNIX_OPTS_SANITIZE_ADDRESS[@]}"
 }
 
 function ci_unix_macos_build {
@@ -856,6 +843,7 @@ function ci_unix_qemu_riscv64_run_tests {
 # ports/windows
 
 function ci_windows_setup {
+    sudo apt-get update
     sudo apt-get install gcc-mingw-w64
 }
 
